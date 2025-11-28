@@ -1,22 +1,17 @@
-# Python virtual environments
+# Virtual environment
 kata-env/
-venv/
-env/
 
-# Python cache files
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-# VS Code settings
-.vscode/
-
-# Misc
-*.lock
-
-# Media / huge files
+# Media files
 *.mp4
 *.mov
 *.jpg
 *.png
+*.gif
+*.avi
+
+# Python cache
+__pycache__/
+*.pyc
+
+# VS Code settings
+.vscode/
