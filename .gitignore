@@ -1,0 +1,16 @@
+# Python virtual environments
+kata-env/
+venv/
+env/
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# VS Code settings
+.vscode/
+
+# Misc
+*.lock
