@@ -14,3 +14,9 @@ __pycache__/
 
 # Misc
 *.lock
+
+# Media / huge files
+*.mp4
+*.mov
+*.jpg
+*.png
