@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import math
 import cv2 as cv
 import numpy as np
@@ -61,7 +60,8 @@ def detect_and_draw(frame):
     # if person is detected and is analyzed, then call the mediapipe function draw_landmarks.
     # draw_landmarks takes 3 parameters being the image, the list of points, and the connections.
     # the pose and hands are draw seperately with the hands using the mp holistic model and the pose using mp pose model
-    # Draw Pose (body only)
+
+    # Draw Pose with pose model.
     if pose_results.pose_landmarks:
         
         mp_drawing.draw_landmarks(
@@ -71,9 +71,11 @@ def detect_and_draw(frame):
             landmark_drawing_spec=POSE_LANDMARK_SPEC,
             connection_drawing_spec=POSE_CONNECTION_SPEC
         )
+
         # Filter separately for scoring/logic
         filtered_landmarks = [lm for lm in pose_results.pose_landmarks.landmark if lm.visibility > 0.6]
 
+    # Draw hands using holistic model
     if holistic_results.left_hand_landmarks:
         mp_drawing.draw_landmarks(
             image=out,
@@ -99,7 +101,7 @@ def detect_and_draw(frame):
 
 
 
-video = cv.VideoCapture(r"C:\Users\other\codeProjects\Python\OpenCv\Garb test footage\appreciation form.mp4")
+video = cv.VideoCapture(r"C:\Users\other\codeProjects\Python\Garb test footage\intermediate form 4.mp4")
 cv.namedWindow('Pose Detection', cv.WINDOW_NORMAL)
 
 
@@ -107,7 +109,8 @@ video.set(3, 1280)
 video.set(4, 960)
 
 
-time1 = 0
+pre_timeframe = 0
+new_timeframe = 0
 
 
 # This loops through every individual frame of the video and calls the detectPose function on each on
@@ -120,15 +123,26 @@ while video.isOpened():
     if not ok:
         break
 
+    
+    frame = cv.resize(frame, (1280, 720))
 
-    frame = cv.flip(frame, 1)
+    new_timeframe = time.time()
+    fps = 1/(new_timeframe - pre_timeframe)
+    pre_timeframe = new_timeframe
+    fps = int(fps)
+    cv.putText(frame, str(fps), (8, 80), cv.FONT_HERSHEY_SIMPLEX, 3, (100, 0, 255), 4)
+
     out_frame, pose_res, hands_res = detect_and_draw(frame)
-
 
     cv.imshow('Pose + Hands', out_frame)
     if cv.waitKey(1) & 0xFF == 27:
         break
 
+# Prints frame time
+start = time.time()
+pose.process(frame)
+holistic.process(frame)
+print("FRAME TIME", time.time() - start)
 
 video.release()
 cv.destroyAllWindows()
