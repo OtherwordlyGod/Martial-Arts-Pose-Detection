@@ -33,7 +33,7 @@ holistic = mp_holistic.Holistic(static_image_mode=False,
 POSE_CONNECTIONS = list(mp_pose.POSE_CONNECTIONS)
 
 # Drawing specs
-POSE_LANDMARK_SPEC = mp_drawing.DrawingSpec(color=(0, 0, 255), thickness=2, circle_radius=2)
+POSE_LANDMARK_SPEC = mp_drawing.DrawingSpec(color=(0, 0, 255), thickness=1, circle_radius=2)
 POSE_CONNECTION_SPEC = mp_drawing.DrawingSpec(color=(0, 255, 0), thickness=2)
 HAND_LANDMARK_SPEC = mp_drawing.DrawingSpec(color=(0, 0, 255), thickness=1, circle_radius=1)
 HAND_CONNECTION_SPEC = mp_drawing.DrawingSpec(color=(0, 255, 0), thickness=1)
@@ -100,6 +100,22 @@ def detect_and_draw(frame):
 
 
 
+# Calculates using vector dot product formula
+def calculate_angle(a, b, c): 
+    dot_product = (a.x - b.x) * (c.x - b.x) + (a.y - b.y) * (c.y - b.y) + (a.z - b.z) * (c.z - b.z)
+
+    mag_BA = math.sqrt((a.x - b.x)**2 + (a.y - b.y)**2 + (a.z - b.z)**2)
+    mag_BC = math.sqrt((c.x - b.x)**2 + (c.y - b.y)**2 + (c.z - b.z)**2)
+
+    # Prevents division by 0
+    if mag_BA == 0 or mag_BC == 0:
+        return None
+
+    # Calculates the angle in radians
+    angle_rad = math.acos(dot_product / (mag_BA * mag_BC))
+
+    # Converts to degree
+    return (angle_rad * 180) / math.pi
 
 video = cv.VideoCapture(r"C:\Users\other\codeProjects\Python\Garb test footage\intermediate form 4.mp4")
 cv.namedWindow('Pose Detection', cv.WINDOW_NORMAL)
