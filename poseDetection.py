@@ -98,7 +98,14 @@ def detect_and_draw(frame):
    # Optionally return raw landmark objects for downstream use (angles, scoring, etc.)
     return out, pose_results, holistic_results
 
-
+# Helper function to clamp the cos value    
+def clamp(n, minn, maxn):
+    if n < minn:
+        return minn
+    elif n > maxn:
+        return maxn
+    else:
+        return n
 
 # Calculates using vector dot product formula
 def calculate_angle(a, b, c): 
@@ -112,7 +119,7 @@ def calculate_angle(a, b, c):
         return None
 
     # Calculates the angle in radians
-    angle_rad = math.acos(dot_product / (mag_BA * mag_BC))
+    angle_rad = math.acos(clamp((dot_product / (mag_BA * mag_BC)), -1, 1))
 
     # Converts to degree
     return (angle_rad * 180) / math.pi
