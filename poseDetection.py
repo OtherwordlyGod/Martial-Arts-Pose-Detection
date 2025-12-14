@@ -18,13 +18,13 @@ mp_drawing = mp.solutions.drawing_utils
 
 
 # Pose (body) - higher complexity for better body accuracy
-pose = mp_pose.Pose(static_image_mode=False,
+pose = mp_pose.Pose(static_image_mode=True,
                     model_complexity=1,
                     min_detection_confidence=0.6,
                     min_tracking_confidence=0.6)
 
 # Hands - dedicated hand model (21 landmarks per hand)
-holistic = mp_holistic.Holistic(static_image_mode=False,
+holistic = mp_holistic.Holistic(static_image_mode=True,
                                 model_complexity=1,
                                 min_detection_confidence=0.6,
                                 min_tracking_confidence=0.6)
@@ -193,51 +193,85 @@ def calculate_pose_angles(results):
 
     return pose_angles
 
-video = cv.VideoCapture(r"C:\Users\other\codeProjects\Python\Garb test footage\intermediate form 4.mp4")
-cv.namedWindow('Pose Detection', cv.WINDOW_NORMAL)
+
+image = cv.imread(r"C:\Users\other\codeProjects\Python\Stances\front stance\front stance 1.png")
+
+if image is None:
+    print("Failed to load image")
+    exit()
+
+# Convert to RGB
+image_rgb = cv.cvtColor(image, cv.COLOR_BGR2RGB)
+
+# Pose detection
+out_image, pose_res, hands_res = detect_and_draw(image)
+
+angles = calculate_pose_angles(pose_res)
+
+print("\nPOSE ANGLES:")
+if angles:
+    for joint, angle in zip(
+        ["R_elbow", "R_shoulder", "R_hip", "R_knee", "R_ankle",
+         "L_elbow", "L_shoulder", "L_hip", "L_knee", "L_ankle"],
+        angles
+    ):
+        print(f"{joint}: {angle:.2f}°")
+else:
+    print("No pose detected.")
 
 
-video.set(3, 1280)
-video.set(4, 960)
+# Show image
+cv.imshow("Stance Pose", out_image)
+cv.waitKey(0)
+cv.destroyAllWindows()
 
 
-pre_timeframe = 0
-new_timeframe = 0
+
+# video = cv.VideoCapture(r"C:\Users\other\codeProjects\Python\Garb test footage\intermediate form 4.mp4")
+# cv.namedWindow('Pose Detection', cv.WINDOW_NORMAL)
 
 
-# This loops through every individual frame of the video and calls the detectPose function on each on
-while video.isOpened():
+# video.set(3, 1280)
+# video.set(4, 960)
 
 
-    ok, frame = video.read()
+# pre_timeframe = 0
+# new_timeframe = 0
 
 
-    if not ok:
-        break
+# # This loops through every individual frame of the video and calls the detectPose function on each on
+# while video.isOpened():
+
+
+#     ok, frame = video.read()
+
+
+#     if not ok:
+#         break
 
     
-    frame = cv.resize(frame, (1280, 720))
+#     frame = cv.resize(frame, (1280, 720))
 
-    new_timeframe = time.time()
-    fps = 1/(new_timeframe - pre_timeframe)
-    pre_timeframe = new_timeframe
-    fps = int(fps)
-    cv.putText(frame, str(fps), (8, 80), cv.FONT_HERSHEY_SIMPLEX, 3, (100, 0, 255), 4)
+#     new_timeframe = time.time()
+#     fps = 1/(new_timeframe - pre_timeframe)
+#     pre_timeframe = new_timeframe
+#     fps = int(fps)
+#     cv.putText(frame, str(fps), (8, 80), cv.FONT_HERSHEY_SIMPLEX, 3, (100, 0, 255), 4)
 
-    out_frame, pose_res, hands_res = detect_and_draw(frame)
+#     out_frame, pose_res, hands_res = detect_and_draw(frame)
 
-    cv.imshow('Pose + Hands', out_frame)
-    if cv.waitKey(1) & 0xFF == 27:
-        break
+#     cv.imshow('Pose + Hands', out_frame)
+#     if cv.waitKey(1) & 0xFF == 27:
+#         break
 
-# Prints frame time
-start = time.time()
-pose.process(frame)
-holistic.process(frame)
-print("FRAME TIME", time.time() - start)
+# # Prints frame time
+# start = time.time()
+# pose.process(frame)
+# holistic.process(frame)
+# print("FRAME TIME", time.time() - start)
 
-video.release()
-cv.destroyAllWindows()
+# video.release()
+# cv.destroyAllWindows()
 
 
  
