@@ -254,3 +254,124 @@ Right Knee:	137.81°
 Left Knee: 133.89°
 Right Ankle: 117.11°	
 Left Ankle: 114.64°
+
+
+Back Stance
+
+Set 1:  R_elbow: 153.23°
+        R_shoulder: 131.24°
+        R_hip: 91.53°
+        R_knee: 59.34°
+        R_ankle: 61.71°
+        L_elbow: 127.49°
+        L_shoulder: 94.42°
+        L_hip: 119.23°
+        L_knee: 83.72°
+        L_ankle: 76.16°
+
+Set 2:  R_elbow: 88.46°
+        R_shoulder: 77.82°
+        R_hip: 105.68°
+        R_knee: 82.06°
+        R_ankle: 71.87°
+        L_elbow: 173.92°
+        L_shoulder: 147.56°
+        L_hip: 102.38°
+        L_knee: 82.10°
+        L_ankle: 55.93°
+
+Set 3:  R_elbow: 115.98°
+        R_shoulder: 54.41°
+        R_hip: 112.45°
+        R_knee: 103.78°
+        R_ankle: 70.97°
+        L_elbow: 119.99°
+        L_shoulder: 18.28°
+        L_hip: 98.86°
+        L_knee: 65.98°
+        L_ankle: 61.75°
+
+Set 4:  R_elbow: 74.94°
+        R_shoulder: 83.93°
+        R_hip: 107.78°
+        R_knee: 85.44°
+        R_ankle: 70.66°
+        L_elbow: 131.19°
+        L_shoulder: 89.46°
+        L_hip: 95.89°
+        L_knee: 115.38°
+        L_ankle: 81.90°
+
+Set 5:  R_elbow: 126.56°
+        R_shoulder: 78.71°
+        R_hip: 117.60°
+        R_knee: 131.90°
+        R_ankle: 98.15°
+        L_elbow: None
+        L_shoulder: None
+        L_hip: None
+        L_knee: None
+        L_ankle: None
+
+Set 6:  R_elbow: None
+        R_shoulder: 89.43°
+        R_hip: 127.76°
+        R_knee: 130.03°
+        R_ankle: 124.79°
+        L_elbow: None
+        L_shoulder: None
+        L_hip: 105.47°
+        L_knee: 136.25°
+        L_ankle: 144.17°
+
+Set 7:  R_elbow: None
+        R_shoulder: None
+        R_hip: None
+        R_knee: None
+        R_ankle: None
+        L_elbow: None
+        L_shoulder: 38.93°
+        L_hip: 138.92°
+        L_knee: 135.57°
+        L_ankle: 125.88° 
+
+Set 8:  R_elbow: None
+        R_shoulder: 83.60°
+        R_hip: 147.23°
+        R_knee: 141.82°
+        R_ankle: 126.07°
+        L_elbow: None
+        L_shoulder: None
+        L_hip: 107.88°
+        L_knee: 135.65°
+        L_ankle: 142.71°
+
+Set 9:  R_elbow: 131.90°
+        R_shoulder: 54.74°
+        R_hip: 113.74°
+        R_knee: 68.33°
+        R_ankle: 60.09°
+        L_elbow: 139.65°
+        L_shoulder: 67.08°
+        L_hip: 128.71°
+        L_knee: 89.31°
+        L_ankle: 71.66°
+
+Set 10: R_elbow: 133.25°
+        R_shoulder: 64.87°
+        R_hip: 138.44°
+        R_knee: 107.60°
+        R_ankle: 77.00°
+        L_elbow: 128.99°
+        L_shoulder: 47.49°
+        L_hip: 110.89°
+        L_knee: 70.75°
+        L_ankle: 66.09°
+
+Average(Lower Body)
+Right Hip: 117.75°
+Left Hip: 111.49°
+Right Knee: 103.05°	
+Left Knee: 102.41°
+Right Ankle: 84.47°	
+Left Ankle: 92.59°
