@@ -124,6 +124,75 @@ def calculate_angle(a, b, c):
     # Converts to degree
     return (angle_rad * 180) / math.pi
 
+def calculate_pose_angles(results):
+
+    # Prevents crashing when no person is detected
+    if (results.pose_landmarks):
+
+        right_elbow = calculate_angle(
+                                        results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_WRIST.value], 
+                                        results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_ELBOW.value], 
+                                        results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_SHOULDER.value]
+                                    )
+
+        right_shoulder = calculate_angle(
+                                            results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_ELBOW.value], 
+                                            results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_SHOULDER.value], 
+                                            results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_HIP.value]
+                                        )
+
+        right_hip = calculate_angle(
+                                        results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_SHOULDER.value],
+                                        results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_HIP.value],
+                                        results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_KNEE.value]
+                                    )
+
+        right_knee = calculate_angle(
+                                        results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_HIP.value],
+                                        results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_KNEE.value],
+                                        results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_ANKLE.value]
+                                    )
+    
+        right_ankle = calculate_angle(
+                                        results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_KNEE.value],
+                                        results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_ANKLE.value],
+                                        results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_FOOT_INDEX.value]
+                                    )
+
+        left_elbow = calculate_angle(
+                                        results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_WRIST.value], 
+                                        results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_ELBOW.value], 
+                                        results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_SHOULDER.value]
+                                    )
+
+        left_shoulder = calculate_angle(
+                                        results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_ELBOW.value], 
+                                        results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_SHOULDER.value], 
+                                        results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_HIP.value]
+                                    )
+
+        left_hip = calculate_angle(
+                                    results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_SHOULDER.value],
+                                    results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_HIP.value],
+                                    results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_KNEE.value]
+                                )
+
+        left_knee = calculate_angle(
+                                    results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_HIP.value],
+                                    results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_KNEE.value],
+                                    results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_ANKLE.value]
+                                )
+    
+        left_ankle = calculate_angle(
+                                    results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_KNEE.value],
+                                    results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_ANKLE.value],
+                                    results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_FOOT_INDEX.value]
+                                )
+
+        pose_angles = [right_elbow, right_shoulder, right_hip, right_knee, right_ankle, left_elbow, left_shoulder, left_hip, left_knee, left_ankle]
+
+    return pose_angles
+
 video = cv.VideoCapture(r"C:\Users\other\codeProjects\Python\Garb test footage\intermediate form 4.mp4")
 cv.namedWindow('Pose Detection', cv.WINDOW_NORMAL)
 
