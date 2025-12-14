@@ -218,7 +218,10 @@ if angles:
          "L_elbow", "L_shoulder", "L_hip", "L_knee", "L_ankle"],
         angles
     ):
-        print(f"{joint}: {angle:.2f}°")
+        if (angle != None):
+            print(f"{joint}: {angle:.2f}°")
+        else: 
+            print(f"{joint}: None")
 else:
     print("No pose detected.")
 
