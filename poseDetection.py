@@ -109,20 +109,23 @@ def clamp(n, minn, maxn):
 
 # Calculates using vector dot product formula
 def calculate_angle(a, b, c): 
-    dot_product = (a.x - b.x) * (c.x - b.x) + (a.y - b.y) * (c.y - b.y) + (a.z - b.z) * (c.z - b.z)
+    if (min(a.visibility, b.visibility, c.visibility) > 0.6):
+        dot_product = (a.x - b.x) * (c.x - b.x) + (a.y - b.y) * (c.y - b.y) + (a.z - b.z) * (c.z - b.z)
 
-    mag_BA = math.sqrt((a.x - b.x)**2 + (a.y - b.y)**2 + (a.z - b.z)**2)
-    mag_BC = math.sqrt((c.x - b.x)**2 + (c.y - b.y)**2 + (c.z - b.z)**2)
+        mag_BA = math.sqrt((a.x - b.x)**2 + (a.y - b.y)**2 + (a.z - b.z)**2)
+        mag_BC = math.sqrt((c.x - b.x)**2 + (c.y - b.y)**2 + (c.z - b.z)**2)
 
-    # Prevents division by 0
-    if mag_BA == 0 or mag_BC == 0:
+        # Prevents division by 0
+        if mag_BA == 0 or mag_BC == 0:
+            return None
+
+        # Calculates the angle in radians
+        angle_rad = math.acos(clamp((dot_product / (mag_BA * mag_BC)), -1, 1))
+
+        # Converts to degree
+        return (angle_rad * 180) / math.pi
+    else:
         return None
-
-    # Calculates the angle in radians
-    angle_rad = math.acos(clamp((dot_product / (mag_BA * mag_BC)), -1, 1))
-
-    # Converts to degree
-    return (angle_rad * 180) / math.pi
 
 def calculate_pose_angles(results):
 
