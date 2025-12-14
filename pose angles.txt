@@ -124,7 +124,7 @@ Average:
     Left Ankle:      81.6°
 
 
-Front stance
+Chun Kul Cha Seh(Front stance)
 
 Set 1:  R_elbow: 86.95°
         R_shoulder: 31.82°
@@ -248,15 +248,15 @@ Set 11: R_elbow: None
         L_ankle: 144.75°
 
 Average(Lower Body): 
-Right Hip: 144.45°	
-Left Hip: 134.83°
-Right Knee:	137.81°	
-Left Knee: 133.89°
-Right Ankle: 117.11°	
-Left Ankle: 114.64°
+        Right Hip: 144.45°	
+        Left Hip: 134.83°
+        Right Knee:	137.81°	
+        Left Knee: 133.89°
+        Right Ankle: 117.11°	
+        Left Ankle: 114.64°
 
 
-Back Stance
+Dwi Kubi(Back Stance)
 
 Set 1:  R_elbow: 153.23°
         R_shoulder: 131.24°
@@ -369,15 +369,15 @@ Set 10: R_elbow: 133.25°
         L_ankle: 66.09°
 
 Average(Lower Body)
-Right Hip: 117.75°
-Left Hip: 111.49°
-Right Knee: 103.05°	
-Left Knee: 102.41°
-Right Ankle: 84.47°	
-Left Ankle: 92.59°
+        Right Hip: 117.75°
+        Left Hip: 111.49°
+        Right Knee: 103.05°	
+        Left Knee: 102.41°
+        Right Ankle: 84.47°	
+        Left Ankle: 92.59°
 
 
-Cat Stance
+Neko Ashi Dachi(Cat Stance)
 
 Set 1:  R_elbow: 114.30°
         R_shoulder: 98.28°
@@ -402,9 +402,9 @@ Set 2:  R_elbow: None
         L_ankle: 66.84°
 
 Average(Lower Body)
-Right Hip: 159.30	
-Left Hip: 150.65
-Right Knee: 131.23	
-Left Knee: 134.61
-Right Ankle: 88.93	
-Left Ankle: 93.70
+        Right Hip: 159.30	
+        Left Hip: 150.65
+        Right Knee: 131.23	
+        Left Knee: 134.61
+        Right Ankle: 88.93	
+        Left Ankle: 93.70
