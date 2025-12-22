@@ -196,36 +196,26 @@ def calculate_pose_angles(results):
 
     return pose_angles
 
+def flip_lr(angles):
+    return [
+        angles[5],  # L_elbow → R_elbow
+        angles[6],  # L_shoulder → R_shoulder
+        angles[7],  # L_hip → R_hip
+        angles[8],  # L_knee → R_knee
+        angles[9],  # L_ankle → R_ankle
+        angles[0],  # R_elbow → L_elbow
+        angles[1],  # R_shoulder → L_shoulder
+        angles[2],  # R_hip → L_hip
+        angles[3],  # R_knee → L_knee
+        angles[4],  # R_ankle → L_ankle
+    ]
 
 def match_stance(angles, stance_ranges, threshold=0.7):
-    score = 0
-    max_score = 0
-    front_confidence = 0
-    back_confidence = 0
+    def score_angles(test_angles):
+        score = 0
+        max_score = 0
 
-    # Loops through every angle and expected value range in the two arrays
-    for angle, expected in zip(angles, stance_ranges):
-
-        # Skips over the upper body if it doesn't exist
-        if angle is None or expected is None:
-            continue
-
-        low, high = expected
-        max_score += 1
-
-        if low <= angle <= high:
-            score += 1
-
-    front_confidence = score / max_score
-    score = 0
-    max_score = 0
-
-    if front_confidence < threshold: 
-        reversed_angles = angles[::-1]
-            # Loops through every angle and expected value range in the two arrays
-        for angle, expected in zip(reversed_angles, stance_ranges):
-
-            # Skips over the upper body if it doesn't exist
+        for angle, expected in zip(test_angles, stance_ranges):
             if angle is None or expected is None:
                 continue
 
@@ -234,11 +224,18 @@ def match_stance(angles, stance_ranges, threshold=0.7):
 
             if low <= angle <= high:
                 score += 1
-        back_confidence = score / max_score
 
-        return back_confidence
-    else: 
+        return score / max_score if max_score > 0 else 0
+
+    front_confidence = score_angles(angles)
+
+    if front_confidence >= threshold:
         return front_confidence
+
+    flipped = flip_lr(angles)
+    back_confidence = score_angles(flipped)
+
+    return back_confidence
 
 
 def classify_pose(angles, ready, front, back, cat):
@@ -330,12 +327,12 @@ FRONT_STANCE = [
         None,
         (120, 160),
         (100, 130),
-        (95, 135),
+        (80, 110),
         None,
         None,
-        (140, 180),
-        (140, 180),
-        (85, 120)
+        (130, 170),
+        (130, 170),
+        (85, 115)
     ]
 
 BACK_STANCE = [
@@ -364,7 +361,7 @@ CAT_STANCE = [
     (79, 109)
 ]
 
-image = cv.imread(r"C:\Users\other\codeProjects\Python\Stances\front stance\front stance 2.png")
+image = cv.imread(r"C:\Users\other\codeProjects\Python\Stances\front stance\front stance 3.png")
 
 if image is None:
     print("Failed to load image")
