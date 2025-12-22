@@ -200,6 +200,8 @@ def calculate_pose_angles(results):
 def match_stance(angles, stance_ranges, threshold=0.7):
     score = 0
     max_score = 0
+    front_confidence = 0
+    back_confidence = 0
 
     # Loops through every angle and expected value range in the two arrays
     for angle, expected in zip(angles, stance_ranges):
@@ -214,23 +216,49 @@ def match_stance(angles, stance_ranges, threshold=0.7):
         if low <= angle <= high:
             score += 1
 
-    if max_score == 0:
-        return 0
+    front_confidence = score / max_score
+    score = 0
+    max_score = 0
 
-    # Returns a percentage of accuracy
-    return score / max_score
+    if front_confidence < threshold: 
+        reversed_angles = angles[::-1]
+            # Loops through every angle and expected value range in the two arrays
+        for angle, expected in zip(reversed_angles, stance_ranges):
+
+            # Skips over the upper body if it doesn't exist
+            if angle is None or expected is None:
+                continue
+
+            low, high = expected
+            max_score += 1
+
+            if low <= angle <= high:
+                score += 1
+        back_confidence = score / max_score
+
+        return back_confidence
+    else: 
+        return front_confidence
 
 
 def classify_pose(angles, ready, front, back, cat):
 
     ready_conf = match_stance(angles, READY_STANCE)
     front_conf = match_stance(angles, FRONT_STANCE)
+    back_conf = match_stance(angles, BACK_STANCE)
+    cat_conf = match_stance(angles, CAT_STANCE)
 
     if ready_conf >= 0.7 and ready_conf > front_conf:
         return "READY STANCE"
 
     if front_conf >= 0.7:
         return "FRONT STANCE"
+    
+    if front_conf >= 0.7:
+        return "BACK STANCE"
+
+    if front_conf >= 0.7:
+        return "CAT STANCE"
 
     return "UNKNOWN"
 
@@ -336,7 +364,7 @@ CAT_STANCE = [
     (79, 109)
 ]
 
-image = cv.imread(r"C:\Users\other\codeProjects\Python\Stances\front stance\front stance 3.png")
+image = cv.imread(r"C:\Users\other\codeProjects\Python\Stances\front stance\front stance 2.png")
 
 if image is None:
     print("Failed to load image")
