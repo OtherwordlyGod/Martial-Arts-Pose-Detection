@@ -197,39 +197,44 @@ def calculate_pose_angles(results):
     return pose_angles
 
 
-image = cv.imread(r"C:\Users\other\codeProjects\Python\Stances\front stance\front stance 1.png")
+def match_stance(angles, stance_ranges, threshold=0.7):
+    score = 0
+    max_score = 0
 
-if image is None:
-    print("Failed to load image")
-    exit()
+    # Loops through every angle and expected value range in the two arrays
+    for angle, expected in zip(angles, stance_ranges):
 
-# Convert to RGB
-image_rgb = cv.cvtColor(image, cv.COLOR_BGR2RGB)
+        # Skips over the upper body if it doesn't exist
+        if angle is None or expected is None:
+            continue
 
-# Pose detection
-out_image, pose_res, hands_res = detect_and_draw(image)
+        low, high = expected
+        max_score += 1
 
-angles = calculate_pose_angles(pose_res)
+        if low <= angle <= high:
+            score += 1
 
-print("\nPOSE ANGLES:")
-if angles:
-    for joint, angle in zip(
-        ["R_elbow", "R_shoulder", "R_hip", "R_knee", "R_ankle",
-         "L_elbow", "L_shoulder", "L_hip", "L_knee", "L_ankle"],
-        angles
-    ):
-        if (angle != None):
-            print(f"{joint}: {angle:.2f}°")
-        else: 
-            print(f"{joint}: None")
-else:
-    print("No pose detected.")
+    if max_score == 0:
+        return 0
+
+    # Returns a percentage of accuracy
+    return score / max_score
 
 
-# Show image
-cv.imshow("Stance Pose", out_image)
-cv.waitKey(0)
-cv.destroyAllWindows()
+def classify_pose(angles, ready, front, back, cat):
+
+    ready_conf = match_stance(angles, READY_STANCE)
+    front_conf = match_stance(angles, FRONT_STANCE)
+
+    if ready_conf >= 0.7 and ready_conf > front_conf:
+        return "READY STANCE"
+
+    if front_conf >= 0.7:
+        return "FRONT STANCE"
+
+    return "UNKNOWN"
+
+
 
 
 
@@ -245,7 +250,7 @@ cv.destroyAllWindows()
 # new_timeframe = 0
 
 
-# # This loops through every individual frame of the video and calls the detectPose function on each on
+# This loops through every individual frame of the video and calls the detectPose function on each on
 # while video.isOpened():
 
 
@@ -279,6 +284,92 @@ cv.destroyAllWindows()
 # video.release()
 # cv.destroyAllWindows()
 
+READY_STANCE = [
+    (145, 175),
+    (22, 52),
+    (153, 183),
+    (120, 150),
+    (65, 95),
+    (150, 180),
+    (30, 60),
+    (153,183),
+    (128, 158),
+    (67, 97)
+    ]
 
- 
+FRONT_STANCE = [
+        None,
+        None,
+        (120, 160),
+        (100, 130),
+        (95, 135),
+        None,
+        None,
+        (140, 180),
+        (140, 180),
+        (85, 120)
+    ]
+
+BACK_STANCE = [
+    None,
+    None,
+    (103, 133),
+    (120, 150),
+    (70, 100), 
+    None, 
+    None,
+    (97, 127),
+    (90, 120),
+    (78, 108)
+]
+
+CAT_STANCE = [
+    None,
+    None,
+    (145, 175),
+    (116, 146),
+    (74, 104),
+    None, 
+    None,
+    (135, 165),
+    (120, 150),
+    (79, 109)
+]
+
+image = cv.imread(r"C:\Users\other\codeProjects\Python\Stances\front stance\front stance 3.png")
+
+if image is None:
+    print("Failed to load image")
+    exit()
+
+# Convert to RGB
+image_rgb = cv.cvtColor(image, cv.COLOR_BGR2RGB)
+
+# Pose detection
+out_image, pose_res, hands_res = detect_and_draw(image)
+
+angles = calculate_pose_angles(pose_res)
+
+print("\nPOSE ANGLES:")
+if angles:
+    for joint, angle in zip(
+        ["R_elbow", "R_shoulder", "R_hip", "R_knee", "R_ankle",
+         "L_elbow", "L_shoulder", "L_hip", "L_knee", "L_ankle"],
+        angles
+    ):
+        if (angle != None):
+            print(f"{joint}: {angle:.2f}°")
+        else: 
+            print(f"{joint}: None")
+else:
+    print("No pose detected.")
+
+print(classify_pose(angles, READY_STANCE, FRONT_STANCE, BACK_STANCE, CAT_STANCE))
+
+
+# Show image
+cv.imshow("Stance Pose", out_image)
+cv.waitKey(0)
+cv.destroyAllWindows()
+
 
