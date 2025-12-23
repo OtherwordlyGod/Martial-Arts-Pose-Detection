@@ -13,21 +13,21 @@ from mediapipe.framework.formats import landmark_pb2
 
 
 mp_pose = mp.solutions.pose
-mp_holistic = mp.solutions.holistic
+# mp_holistic = mp.solutions.holistic
 mp_drawing = mp.solutions.drawing_utils
 
 
 # Pose (body) - higher complexity for better body accuracy
-pose = mp_pose.Pose(static_image_mode=True,
+pose = mp_pose.Pose(static_image_mode=False,
                     model_complexity=1,
                     min_detection_confidence=0.6,
                     min_tracking_confidence=0.6)
 
-# Hands - dedicated hand model (21 landmarks per hand)
-holistic = mp_holistic.Holistic(static_image_mode=True,
-                                model_complexity=1,
-                                min_detection_confidence=0.6,
-                                min_tracking_confidence=0.6)
+# # Hands - dedicated hand model (21 landmarks per hand)
+# holistic = mp_holistic.Holistic(static_image_mode=True,
+#                                 model_complexity=1,
+#                                 min_detection_confidence=0.6,
+#                                 min_tracking_confidence=0.6)
 
 
 POSE_CONNECTIONS = list(mp_pose.POSE_CONNECTIONS)
@@ -35,8 +35,8 @@ POSE_CONNECTIONS = list(mp_pose.POSE_CONNECTIONS)
 # Drawing specs
 POSE_LANDMARK_SPEC = mp_drawing.DrawingSpec(color=(0, 0, 255), thickness=1, circle_radius=2)
 POSE_CONNECTION_SPEC = mp_drawing.DrawingSpec(color=(0, 255, 0), thickness=2)
-HAND_LANDMARK_SPEC = mp_drawing.DrawingSpec(color=(0, 0, 255), thickness=1, circle_radius=1)
-HAND_CONNECTION_SPEC = mp_drawing.DrawingSpec(color=(0, 255, 0), thickness=1)
+# HAND_LANDMARK_SPEC = mp_drawing.DrawingSpec(color=(0, 0, 255), thickness=1, circle_radius=1)
+# HAND_CONNECTION_SPEC = mp_drawing.DrawingSpec(color=(0, 255, 0), thickness=1)
 
 def detect_and_draw(frame):
 
@@ -50,7 +50,7 @@ def detect_and_draw(frame):
 
     # process the image and get the pose
     pose_results = pose.process(image)
-    holistic_results = holistic.process(image)
+    # holistic_results = holistic.process(image)
 
     image.flags.writeable = True
 
@@ -76,27 +76,27 @@ def detect_and_draw(frame):
         filtered_landmarks = [lm for lm in pose_results.pose_landmarks.landmark if lm.visibility > 0.6]
 
     # Draw hands using holistic model
-    if holistic_results.left_hand_landmarks:
-        mp_drawing.draw_landmarks(
-            image=out,
-            landmark_list=holistic_results.left_hand_landmarks,
-            connections=mp_holistic.HAND_CONNECTIONS,
-            landmark_drawing_spec=HAND_LANDMARK_SPEC,
-            connection_drawing_spec=HAND_CONNECTION_SPEC
-        )
+    # if holistic_results.left_hand_landmarks:
+    #     mp_drawing.draw_landmarks(
+    #         image=out,
+    #         landmark_list=holistic_results.left_hand_landmarks,
+    #         connections=mp_holistic.HAND_CONNECTIONS,
+    #         landmark_drawing_spec=HAND_LANDMARK_SPEC,
+    #         connection_drawing_spec=HAND_CONNECTION_SPEC
+    #     )
 
-    if holistic_results.right_hand_landmarks:
-        mp_drawing.draw_landmarks(
-            image=out,
-            landmark_list=holistic_results.right_hand_landmarks,
-            connections=mp_holistic.HAND_CONNECTIONS,
-            landmark_drawing_spec=HAND_LANDMARK_SPEC,
-            connection_drawing_spec=HAND_CONNECTION_SPEC
-        )
+    # if holistic_results.right_hand_landmarks:
+    #     mp_drawing.draw_landmarks(
+    #         image=out,
+    #         landmark_list=holistic_results.right_hand_landmarks,
+    #         connections=mp_holistic.HAND_CONNECTIONS,
+    #         landmark_drawing_spec=HAND_LANDMARK_SPEC,
+    #         connection_drawing_spec=HAND_CONNECTION_SPEC
+    #     )
 
 
    # Optionally return raw landmark objects for downstream use (angles, scoring, etc.)
-    return out, pose_results, holistic_results
+    return out, pose_results#, holistic_results
 
 # Helper function to clamp the cos value    
 def clamp(n, minn, maxn):
@@ -251,63 +251,14 @@ def classify_pose(angles, ready, front, back, cat):
     if front_conf >= 0.7:
         return "FRONT STANCE"
     
-    if front_conf >= 0.7:
+    if back_conf >= 0.7:
         return "BACK STANCE"
 
-    if front_conf >= 0.7:
+    if cat_conf >= 0.7:
         return "CAT STANCE"
 
     return "UNKNOWN"
 
-
-
-
-
-# video = cv.VideoCapture(r"C:\Users\other\codeProjects\Python\Garb test footage\intermediate form 4.mp4")
-# cv.namedWindow('Pose Detection', cv.WINDOW_NORMAL)
-
-
-# video.set(3, 1280)
-# video.set(4, 960)
-
-
-# pre_timeframe = 0
-# new_timeframe = 0
-
-
-# This loops through every individual frame of the video and calls the detectPose function on each on
-# while video.isOpened():
-
-
-#     ok, frame = video.read()
-
-
-#     if not ok:
-#         break
-
-    
-#     frame = cv.resize(frame, (1280, 720))
-
-#     new_timeframe = time.time()
-#     fps = 1/(new_timeframe - pre_timeframe)
-#     pre_timeframe = new_timeframe
-#     fps = int(fps)
-#     cv.putText(frame, str(fps), (8, 80), cv.FONT_HERSHEY_SIMPLEX, 3, (100, 0, 255), 4)
-
-#     out_frame, pose_res, hands_res = detect_and_draw(frame)
-
-#     cv.imshow('Pose + Hands', out_frame)
-#     if cv.waitKey(1) & 0xFF == 27:
-#         break
-
-# # Prints frame time
-# start = time.time()
-# pose.process(frame)
-# holistic.process(frame)
-# print("FRAME TIME", time.time() - start)
-
-# video.release()
-# cv.destroyAllWindows()
 
 READY_STANCE = [
     (145, 175),
@@ -338,63 +289,109 @@ FRONT_STANCE = [
 BACK_STANCE = [
     None,
     None,
-    (103, 133),
-    (120, 150),
-    (70, 100), 
+    (90, 120),
+    (50, 90),
+    (55, 85), 
     None, 
     None,
     (97, 127),
-    (90, 120),
-    (78, 108)
+    (75, 110),
+    (70, 100)
 ]
 
 CAT_STANCE = [
     None,
     None,
-    (145, 175),
-    (116, 146),
-    (74, 104),
+    (140, 180),
+    (95, 150),
+    (68, 108),
     None, 
     None,
-    (135, 165),
-    (120, 150),
-    (79, 109)
+    (130, 170),
+    (115, 155),
+    (70, 110)
 ]
 
-image = cv.imread(r"C:\Users\other\codeProjects\Python\Stances\front stance\front stance 3.png")
-
-if image is None:
-    print("Failed to load image")
-    exit()
-
-# Convert to RGB
-image_rgb = cv.cvtColor(image, cv.COLOR_BGR2RGB)
-
-# Pose detection
-out_image, pose_res, hands_res = detect_and_draw(image)
-
-angles = calculate_pose_angles(pose_res)
-
-print("\nPOSE ANGLES:")
-if angles:
-    for joint, angle in zip(
-        ["R_elbow", "R_shoulder", "R_hip", "R_knee", "R_ankle",
-         "L_elbow", "L_shoulder", "L_hip", "L_knee", "L_ankle"],
-        angles
-    ):
-        if (angle != None):
-            print(f"{joint}: {angle:.2f}°")
-        else: 
-            print(f"{joint}: None")
-else:
-    print("No pose detected.")
-
-print(classify_pose(angles, READY_STANCE, FRONT_STANCE, BACK_STANCE, CAT_STANCE))
+video = cv.VideoCapture(r"C:\Users\other\codeProjects\Python\Garb test footage\intermediate form 4.mp4")
+cv.namedWindow('Pose Detection', cv.WINDOW_NORMAL)
 
 
-# Show image
-cv.imshow("Stance Pose", out_image)
-cv.waitKey(0)
-cv.destroyAllWindows()
+video.set(3, 1280)
+video.set(4, 960)
+
+
+pre_timeframe = 0
+new_timeframe = 0
+
+
+# This loops through every individual frame of the video and calls the detectPose function on each on
+while video.isOpened():
+
+
+    ok, frame = video.read()
+
+
+    if not ok:
+        break
+
+    
+    frame = cv.resize(frame, (1280, 720))
+
+    new_timeframe = time.time()
+    fps = 1/(new_timeframe - pre_timeframe)
+    pre_timeframe = new_timeframe
+    fps = int(fps)
+    cv.putText(frame, str(fps), (8, 80), cv.FONT_HERSHEY_SIMPLEX, 3, (100, 0, 255), 4)
+
+    out_frame, pose_res = detect_and_draw(frame)
+
+    cv.imshow('Pose', out_frame)
+    if cv.waitKey(1) & 0xFF == 27:
+        break
+
+# Prints frame time
+start = time.time()
+pose.process(frame)
+print("FRAME TIME", time.time() - start)
+
+# video.release()
+# cv.destroyAllWindows()
+
+# image = cv.imread(r"C:\Users\other\codeProjects\Python\Stances\cat stance\cat stance 2.png")
+
+# if image is None:
+#     print("Failed to load image")
+#     exit()
+
+# # Convert to RGB
+# image_rgb = cv.cvtColor(image, cv.COLOR_BGR2RGB)
+
+# # Pose detection
+# out_image, pose_res = detect_and_draw(image)
+# #, hands_res
+
+# angles = calculate_pose_angles(pose_res)
+
+# print("\nPOSE ANGLES:")
+# if angles:
+#     for joint, angle in zip(
+#         ["R_elbow", "R_shoulder", "R_hip", "R_knee", "R_ankle",
+#          "L_elbow", "L_shoulder", "L_hip", "L_knee", "L_ankle"],
+#         angles
+#     ):
+#         if (angle != None):
+#             print(f"{joint}: {angle:.2f}°")
+#         else: 
+#             print(f"{joint}: None")
+# else:
+#     print("No pose detected.")
+
+# print(classify_pose(angles, READY_STANCE, FRONT_STANCE, BACK_STANCE, CAT_STANCE))
+
+
+# # Show image
+# cv.imshow("Stance Pose", out_image)
+# cv.waitKey(0)
+# cv.destroyAllWindows()
 
 
