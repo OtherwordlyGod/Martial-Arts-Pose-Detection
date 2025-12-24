@@ -376,35 +376,3 @@ Average(Lower Body)
         Right Ankle: 84.47°	
         Left Ankle: 92.59°
 
-
-Neko Ashi Dachi(Cat Stance)
-
-Set 1:  R_elbow: 114.30°
-        R_shoulder: 98.28°
-        R_hip: 170.98°
-        R_knee: 157.95°
-        R_ankle: 95.04°
-        L_elbow: None
-        L_shoulder: 57.97°
-        L_hip: 159.97°
-        L_knee: 141.83°
-        L_ankle: 120.56°
-
-Set 2:  R_elbow: None
-        R_shoulder: None
-        R_hip: 147.61°
-        R_knee: 104.51°
-        R_ankle: 82.82°
-        L_elbow: 121.65°
-        L_shoulder: 113.56°
-        L_hip: 141.33°
-        L_knee: 127.39°
-        L_ankle: 66.84°
-
-Average(Lower Body)
-        Right Hip: 159.30	
-        Left Hip: 150.65
-        Right Knee: 131.23	
-        Left Knee: 134.61
-        Right Ankle: 88.93	
-        Left Ankle: 93.70
