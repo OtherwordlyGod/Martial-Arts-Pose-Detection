@@ -242,12 +242,12 @@ def match_stance(angles, stance_ranges, threshold=0.7):
     return back_confidence
 
 
-def classify_pose(angles, ready, front, back, cat):
+def classify_pose(angles, ready, front, back):
 
     ready_conf = match_stance(angles, READY_STANCE)
     front_conf = match_stance(angles, FRONT_STANCE)
     back_conf = match_stance(angles, BACK_STANCE)
-    cat_conf = match_stance(angles, CAT_STANCE)
+    # cat_conf = match_stance(angles, CAT_STANCE)
 
     if ready_conf >= 0.7 and ready_conf > front_conf:
         return "READY STANCE"
@@ -258,8 +258,8 @@ def classify_pose(angles, ready, front, back, cat):
     if back_conf >= 0.7:
         return "BACK STANCE"
 
-    if cat_conf >= 0.7:
-        return "CAT STANCE"
+    # if cat_conf >= 0.7:
+    #     return "CAT STANCE"
 
     return "NONE"
 
@@ -303,20 +303,20 @@ BACK_STANCE = [
     (70, 100)
 ]
 
-CAT_STANCE = [
-    None,
-    None,
-    (140, 180),
-    (95, 150),
-    (68, 108),
-    None, 
-    None,
-    (130, 170),
-    (115, 155),
-    (70, 110)
-]
+# CAT_STANCE = [
+#     None,
+#     None,
+#     (140, 180),
+#     (95, 150),
+#     (68, 108),
+#     None, 
+#     None,
+#     (130, 170),
+#     (115, 155),
+#     (70, 110)
+# ]
 
-video = cv.VideoCapture(r"C:\Users\other\codeProjects\Python\Garb test footage\intermediate form 4.mp4")
+video = cv.VideoCapture(r"C:\Users\other\codeProjects\Python\Garb test footage\bassai form of the rock - Trim.mp4")
 cv.namedWindow('Pose Detection', cv.WINDOW_NORMAL)
 
 
@@ -339,7 +339,7 @@ def most_frequent_stance(arr):
 
 
 stance_buffer = []
-window = 5
+window = 10
 current_stance = "NONE"
 
 # This loops through every individual frame of the video and calls the detectPose function on each on
@@ -360,9 +360,8 @@ while video.isOpened():
 
     out_frame, pose_res = detect_and_draw(frame)
     angles = calculate_pose_angles(pose_res)
-    stance_buffer.append(classify_pose(angles, READY_STANCE, FRONT_STANCE, BACK_STANCE, CAT_STANCE))
+    stance_buffer.append(classify_pose(angles, READY_STANCE, FRONT_STANCE, BACK_STANCE))
 
-    #NOTE TO SELF: right now the stance is being detected and appended to stance buffer but it isnt displaying as text onto the screen
     if len(stance_buffer) > window: 
         stance_buffer.pop(0)
 
@@ -370,7 +369,7 @@ while video.isOpened():
         current_stance = most_frequent_stance(stance_buffer)
     
     cv.putText(out_frame, current_stance,
-               (8, 130), cv.FONT_HERSHEY_SIMPLEX, 3, (100, 0, 255), 4)
+               (8, 160), cv.FONT_HERSHEY_SIMPLEX, 2, (100, 0, 255), 3)
 
     # for stance in stance_buffer:
     #     print(stance)
