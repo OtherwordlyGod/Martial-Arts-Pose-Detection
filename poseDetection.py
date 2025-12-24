@@ -6,6 +6,8 @@ import mediapipe as mp
 import matplotlib.pyplot as plt
 import time
 from mediapipe.framework.formats import landmark_pb2
+from collections import Counter
+
 
 
 #Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
@@ -128,6 +130,8 @@ def calculate_angle(a, b, c):
         return None
 
 def calculate_pose_angles(results):
+
+    pose_angles = [None] * 10
 
     # Prevents crashing when no person is detected
     if (results.pose_landmarks):
@@ -257,7 +261,7 @@ def classify_pose(angles, ready, front, back, cat):
     if cat_conf >= 0.7:
         return "CAT STANCE"
 
-    return "UNKNOWN"
+    return "NONE"
 
 
 READY_STANCE = [
@@ -323,17 +327,28 @@ video.set(4, 960)
 pre_timeframe = 0
 new_timeframe = 0
 
+def most_frequent_stance(arr):
+    # Remove invalid entries
+    filtered = [x for x in arr if x not in (None, "NONE")]
+
+    if not filtered:
+        return "NONE"
+
+    counts = Counter(filtered)
+    return counts.most_common(1)[0][0]
+
+
+stance_buffer = []
+window = 5
+current_stance = "NONE"
 
 # This loops through every individual frame of the video and calls the detectPose function on each on
 while video.isOpened():
 
-
     ok, frame = video.read()
-
 
     if not ok:
         break
-
     
     frame = cv.resize(frame, (1280, 720))
 
@@ -344,6 +359,21 @@ while video.isOpened():
     cv.putText(frame, str(fps), (8, 80), cv.FONT_HERSHEY_SIMPLEX, 3, (100, 0, 255), 4)
 
     out_frame, pose_res = detect_and_draw(frame)
+    angles = calculate_pose_angles(pose_res)
+    stance_buffer.append(classify_pose(angles, READY_STANCE, FRONT_STANCE, BACK_STANCE, CAT_STANCE))
+
+    #NOTE TO SELF: right now the stance is being detected and appended to stance buffer but it isnt displaying as text onto the screen
+    if len(stance_buffer) > window: 
+        stance_buffer.pop(0)
+
+    if len(stance_buffer) == window:
+        current_stance = most_frequent_stance(stance_buffer)
+    
+    cv.putText(out_frame, current_stance,
+               (8, 130), cv.FONT_HERSHEY_SIMPLEX, 3, (100, 0, 255), 4)
+
+    # for stance in stance_buffer:
+    #     print(stance)
 
     cv.imshow('Pose', out_frame)
     if cv.waitKey(1) & 0xFF == 27:
