@@ -15,7 +15,7 @@ In this project, I am using BlazePose through the google ai framework Mediapipe,
 This pose estimation works through two-step detector system that combines a computationally expensive object detector with a lightweight object tracker. The object detector is first ran and it creates a bounding box around the subject. Then the tracker comes in and predicts the position of points/landmarks inside the bounding box. As the video plays, the tracker continues to predict the landmarks, only reactivating the detector when it fails to track the person with high confidence. The model works the best when the subject is standing 2-4 meters away from the camera and it only works with single person pose-detection. The point or landmark positions that Mediapipe uses are shown below: 
 
 
-<img src="C:\Users\other\codeProjects\Python\MediaPipe-Holistic-API-31-32-a-the-hand-and-b-the-body.png"/>
+<img src=C:\Users\other\codeProjects\Python\OpenCv\MediaPipe-Holistic-API-31-32-a-the-hand-and-b-the-body.png/>
 
 
 I originally wanted to combine Mediapipe's pose estimation model with its holistic model for a total of 74 unique points across the body: 21 landmarks on each hand and the remaining 33 points spread across the body at key joints. However it was found that layering both models causes a significant decrease in performance with fps dropping from ~30 to less than 12 frames a second. This lag made it incredibly difficult to run test footage through which and in order to avoid further performance issues, I only used the lighter pose model for my first minimal viable product.
