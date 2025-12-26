@@ -9,17 +9,18 @@ from mediapipe.framework.formats import landmark_pb2
 from collections import Counter
 
 
-
-#Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+# Terminal commands for activating kata environment where all my dependencies are downloaded
+# Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 # .\kata-env\Scripts\activate
 
 
 mp_pose = mp.solutions.pose
+# Removed holistic model for performance reasons
 # mp_holistic = mp.solutions.holistic
 mp_drawing = mp.solutions.drawing_utils
 
 
-# Pose (body) - higher complexity for better body accuracy
+# Pose (body) - higher complexity for better pose accuracy
 pose = mp_pose.Pose(static_image_mode=False,
                     model_complexity=1,
                     min_detection_confidence=0.6,
@@ -35,7 +36,7 @@ pose = mp_pose.Pose(static_image_mode=False,
 POSE_CONNECTIONS = list(mp_pose.POSE_CONNECTIONS)
 
 # Drawing specs
-POSE_LANDMARK_SPEC = mp_drawing.DrawingSpec(color=(0, 0, 255), thickness=1, circle_radius=2)
+POSE_LANDMARK_SPEC = mp_drawing.DrawingSpec(color=(0, 0, 255), thickness=2, circle_radius=2)
 POSE_CONNECTION_SPEC = mp_drawing.DrawingSpec(color=(0, 255, 0), thickness=2)
 # HAND_LANDMARK_SPEC = mp_drawing.DrawingSpec(color=(0, 0, 255), thickness=1, circle_radius=1)
 # HAND_CONNECTION_SPEC = mp_drawing.DrawingSpec(color=(0, 255, 0), thickness=1)
@@ -200,6 +201,7 @@ def calculate_pose_angles(results):
 
     return pose_angles
 
+# Flips angles array for stance symmetry purposes
 def flip_lr(angles):
     return [
         angles[5],  # L_elbow → R_elbow
@@ -220,6 +222,7 @@ def match_stance(angles, stance_ranges, threshold=0.7):
         max_score = 0
 
         for angle, expected in zip(test_angles, stance_ranges):
+            # Skips if None is detected
             if angle is None or expected is None:
                 continue
 
@@ -229,6 +232,7 @@ def match_stance(angles, stance_ranges, threshold=0.7):
             if low <= angle <= high:
                 score += 1
 
+        # Returns a confidence percentage
         return score / max_score if max_score > 0 else 0
 
     front_confidence = score_angles(angles)
@@ -247,6 +251,7 @@ def classify_pose(angles, ready, front, back):
     ready_conf = match_stance(angles, READY_STANCE)
     front_conf = match_stance(angles, FRONT_STANCE)
     back_conf = match_stance(angles, BACK_STANCE)
+    # Cat stance removed due to lack of data leading to accuracy issues
     # cat_conf = match_stance(angles, CAT_STANCE)
 
     if ready_conf >= 0.7 and ready_conf > front_conf:
@@ -316,7 +321,9 @@ BACK_STANCE = [
 #     (70, 110)
 # ]
 
-video = cv.VideoCapture(r"C:\Users\other\codeProjects\Python\Garb test footage\bassai form of the rock - Trim.mp4")
+# video path here. The r is neccisary for some reason or else it doesn't run?
+# use 0 for webcam
+video = cv.VideoCapture(r"C:\Users\other\codeProjects\Python\Garb test footage\intermediate form 4.mp4")
 cv.namedWindow('Pose Detection', cv.WINDOW_NORMAL)
 
 
@@ -382,10 +389,11 @@ while video.isOpened():
 start = time.time()
 pose.process(frame)
 print("FRAME TIME", time.time() - start)
+video.release()
+cv.destroyAllWindows()
 
-# video.release()
-# cv.destroyAllWindows()
 
+# IMAGE PROCESSING CODE
 # image = cv.imread(r"C:\Users\other\codeProjects\Python\Stances\cat stance\cat stance 2.png")
 
 # if image is None:
